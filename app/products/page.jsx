@@ -8,37 +8,37 @@ const ProductPage = () => {
       id: 1,
       name: 'Matcha Strawberry',
       price: 3.75,
-      image: '/kambia-product-photos/matcha-strawberry/matcha-strawberry1.png',
+      image: '/kambia-product-photos/matcha-strawberry/matcha-strawberry1.jpeg',
     },
     {
       id: 2,
       name: 'Lemon',
       price: 3.75,
-      image: '/kambia-product-photos/lemon/lemon1.png',
+      image: '/kambia-product-photos/lemon/lemon1.jpeg',
     },
     {
       id: 3,
       name: 'Pumpkin Spice',
       price: 3.75,
-      image: '/kambia-product-photos/pumpkin-spice/pumpkin-spice1.png',
+      image: '/kambia-product-photos/pumpkin-spice/pumpkin-spice1.jpeg',
     },
     {
       id: 4,
       name: 'Apple Pie',
       price: 3.75,
-      image: '/kambia-product-photos/apple-pie/apple-pie1.png',
+      image: '/kambia-product-photos/apple-pie/apple-pie1.jpeg',
     },
     {
       id: 5,
       name: 'S\'mores',
       price: 3.75,
-      image: '/kambia-product-photos/smores/smores1.png',
+      image: '/kambia-product-photos/smores/smores1.jpeg',
     },
     {
       id: 6,
       name: 'Coconut',
       price: 3.75,
-      image: '/kambia-product-photos/coconut/coconut1.png',
+      image: '/kambia-product-photos/coconut/coconut1.jpeg',
     },
   ]
 
