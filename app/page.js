@@ -15,7 +15,7 @@ export default function Home() {
       position: 'fixed',
       top:0,
       left:0,
-      background: 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("/images/macarons-background.jpg")',
+      background: 'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("/images/macarons-background.jpg")',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'fixed',
