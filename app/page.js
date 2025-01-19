@@ -49,7 +49,7 @@ export default function Home() {
         </p>
         <div style={{
           position: 'relative',
-          top: '2.2em',
+          top: '2.8em',
           left: '4.3em',
         }}>
           <Link 
