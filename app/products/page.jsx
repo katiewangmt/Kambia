@@ -84,9 +84,18 @@ export default function ProductsPage() {
                   style={{ objectFit: 'cover' }}
                 />
               </div>
-              <div style={{ padding: '0.5rem' }}>
-                <h3 className={cinzel.className}>{macaron.name}</h3>
-                <p style={{ color: '#666' }}>${macaron.price.toFixed(2)}</p>
+              <div style={{ paddingTop: '0.5rem', paddingInlineStart: '1rem' }}>
+                <h3 className={cinzel.className} style={{ 
+                  fontSize: '1.5rem'
+                }}>
+                  {macaron.name}
+                </h3>
+                <p style={{ 
+                  color: '#666',
+                  fontSize: '1.3rem'
+                }}>
+                  ${macaron.price.toFixed(2)}
+                </p>
               </div>
             </div>
           ))}
