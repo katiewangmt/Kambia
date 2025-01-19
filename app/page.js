@@ -15,7 +15,7 @@ export default function Home() {
       position: 'fixed',
       top:0,
       left:0,
-      background: 'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("/images/macarons-background.jpg")',
+      background: 'linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url("/images/macarons-background.jpg")',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'fixed',
@@ -59,7 +59,7 @@ export default function Home() {
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
               transition: 'all 0.3s',
-              backgroundColor: 'rgba(0, 0, 0, 0.45)',
+              backgroundColor: 'rgba(0, 0, 0, 0.35)',
               textDecoration: 'underline',
               textDecorationColor: '#962a24',
             }}
