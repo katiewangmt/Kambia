@@ -1,7 +1,10 @@
 import Link from 'next/link'
-import { Playfair_Display, Montserrat } from 'next/font/google'
+import { Cinzel, Montserrat } from 'next/font/google'
 
-const playfair = Playfair_Display({ subsets: ['latin'] })
+const cinzel = Cinzel({ 
+  subsets: ['latin'],
+  weight: ['400']
+})
 const montserrat = Montserrat({ subsets: ['latin'] })
 
 export default function Home() {
@@ -22,31 +25,32 @@ export default function Home() {
     }}>
       <div style={{
         position: 'absolute',
-        top: '-4.4em',
+        top: '-4.1em',
         left: '48px',
         padding: '20px',
       }}>
         <h1 style={{
           fontSize: '110px',
           color: 'white',
-          marginBottom: '-0.2em',
+          marginBottom: '-0.38em',
           fontWeight: '200',
           letterSpacing: '0.06em',
-        }} className={playfair.className}>
+        }} className={cinzel.className}>
           KAMBIA
         </h1>
         <p style={{
           fontSize: '23px',
           color: '#fffde8',
+          marginLeft: '0.5em',
           marginBottom: '2.5em',
           letterSpacing: '0.09em',
         }} className={montserrat.className}>
-          Crafting moments of delight 𓌉◯𓇋
+          Crafting moments of delight! 𓌉◯𓇋
         </p>
         <div style={{
           position: 'relative',
-          top: '2em',
-          left: '3em',
+          top: '2.2em',
+          left: '4.3em',
         }}>
           <Link 
             href="/products"
