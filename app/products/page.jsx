@@ -98,7 +98,8 @@ export default function ProductsPage() {
 
   const handleCheckout = async () => {
     try {
-      const validBoxes = boxes.filter(box => box.macarons.length > 0);
+      debugger;
+      console.log('Starting checkout...')
       
       const response = await fetch('/api/checkout', {
         method: 'POST',
