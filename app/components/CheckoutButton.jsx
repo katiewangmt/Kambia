@@ -6,32 +6,37 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 export default function CheckoutButton({ boxes }) {
   const handleCheckout = async () => {
     try {
-      // Call the checkout API
+      // Only send boxes that have macarons
+      const filledBoxes = boxes.filter(box => box.macarons.length > 0);
+      
+      if (filledBoxes.length === 0) {
+        alert('Please add items to your cart before checking out.');
+        return;
+      }
+
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          boxes: boxes.filter(box => box.macarons.length > 0)
-        }),
+        body: JSON.stringify({ boxes: filledBoxes }),
       });
 
-      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-      if (data.sessionId) {
-        // Redirect to Stripe checkout
-        const stripe = await stripePromise;
-        const { error } = await stripe.redirectToCheckout({
-          sessionId: data.sessionId,
-        });
+      const { sessionId } = await response.json();
 
-        if (error) {
-          console.error('Stripe redirect error:', error);
-          alert('Failed to redirect to checkout. Please try again.');
-        }
-      } else {
+      if (!sessionId) {
         throw new Error('No session ID received');
+      }
+
+      const stripe = await stripePromise;
+      const { error } = await stripe.redirectToCheckout({ sessionId });
+
+      if (error) {
+        throw error;
       }
     } catch (error) {
       console.error('Checkout error:', error);
@@ -40,10 +45,19 @@ export default function CheckoutButton({ boxes }) {
   };
 
   return (
-    <button 
+    <button
       onClick={handleCheckout}
-      disabled={!boxes || boxes.length === 0}
-      className="checkout-button"
+      disabled={!boxes || boxes.every(box => box.macarons.length === 0)}
+      style={{
+        backgroundColor: '#736f8a',
+        color: 'white',
+        padding: '1rem 2rem',
+        border: 'none',
+        borderRadius: '4px',
+        cursor: 'pointer',
+        fontSize: '1.1rem',
+        width: '80%'
+      }}
     >
       Checkout
     </button>
