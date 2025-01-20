@@ -14,43 +14,33 @@ export async function POST(req) {
     const lineItems = boxes.map(box => {
       if (box.macarons.length === 0) return null;
 
-      // Create description of flavors for this box
-      const flavorList = box.macarons.map(macaron => macaron.name).join(', ');
       const totalPrice = box.macarons.reduce((sum, macaron) => sum + macaron.price * 100, 0);
-
+      
       return {
         price_data: {
           currency: 'usd',
           product_data: {
-            name: `Macaron Box ${box.id}`,
-            description: `Flavors: ${flavorList}`,  // Add flavors to description
-            metadata: {
-              flavors: flavorList,  // Also store in metadata for reference
-              boxId: box.id.toString()
-            }
+            name: `Macaron Box`,
           },
           unit_amount: totalPrice,
         },
         quantity: 1,
       };
-    }).filter(Boolean); // Remove any null items
+    }).filter(Boolean);
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
-      success_url: `${req.headers.get('origin')}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.get('origin')}/products`,
-      metadata: {
-        totalBoxes: boxes.length.toString(),
-      }
+      success_url: `${process.env.NEXT_PUBLIC_URL}?success=true`,
+      cancel_url: `${process.env.NEXT_PUBLIC_URL}/products`,
     });
 
-    return NextResponse.json({ sessionId: session.id });
+    return NextResponse.json({ url: session.url });
   } catch (error) {
     console.error('Stripe error:', error);
     return NextResponse.json(
-      { error: error.message },
+      { error: 'Failed to create checkout session' },
       { status: 500 }
     );
   }
