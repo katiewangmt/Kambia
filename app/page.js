@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { Cinzel, Montserrat } from 'next/font/google'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 
 const cinzel = Cinzel({ 
@@ -10,7 +10,7 @@ const cinzel = Cinzel({
 })
 const montserrat = Montserrat({ subsets: ['latin'] })
 
-export default function HomePage() {
+function HomeContent() {
   const [isVisible, setIsVisible] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const searchParams = useSearchParams()
@@ -151,5 +151,22 @@ export default function HomePage() {
         </div>
       )}
     </div>
+  )
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh'
+      }}>
+        Loading...
+      </div>
+    }>
+      <HomeContent />
+    </Suspense>
   )
 } 
