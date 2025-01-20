@@ -11,46 +11,29 @@ export async function POST(req) {
     const body = await req.json();
     const { boxes } = body;
 
-    const lineItems = boxes.map(box => {
-      if (box.macarons.length === 0) return null;
-
-      // Create description of flavors for this box
-      const flavorList = box.macarons.map(macaron => macaron.name).join(', ');
-      const totalPrice = box.macarons.reduce((sum, macaron) => sum + macaron.price * 100, 0);
-
-      return {
+    // Simplify to just create a single line item for testing
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [{
         price_data: {
           currency: 'usd',
           product_data: {
-            name: `Macaron Box ${box.id}`,
-            description: `Flavors: ${flavorList}`,  // Add flavors to description
-            metadata: {
-              flavors: flavorList,  // Also store in metadata for reference
-              boxId: box.id.toString()
-            }
+            name: 'Macaron Box',
           },
-          unit_amount: totalPrice,
+          unit_amount: 1500, // $15.00
         },
         quantity: 1,
-      };
-    }).filter(Boolean); // Remove any null items
-
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: lineItems,
+      }],
       mode: 'payment',
-      success_url: 'https://kambiacooking.com/success',
+      success_url: 'https://kambiacooking.com',
       cancel_url: 'https://kambiacooking.com/products',
-      metadata: {
-        totalBoxes: boxes.length.toString(),
-      }
     });
 
     return NextResponse.json({ url: session.url });
   } catch (error) {
     console.error('Stripe error:', error);
     return NextResponse.json(
-      { error: 'Checkout failed' },
+      { error: 'Failed to create checkout session' },
       { status: 500 }
     );
   }

@@ -104,11 +104,6 @@ export default function ProductsPage() {
     try {
       console.log('Starting checkout...')
       
-      // Get Stripe.js instance
-      const stripe = await stripePromise
-      console.log('Stripe loaded')
-
-      // Call your backend to create the Checkout Session
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: {
@@ -119,21 +114,13 @@ export default function ProductsPage() {
         }),
       })
 
-      console.log('API Response:', response)
       const data = await response.json()
-      console.log('Session Data:', data)
-
-      if (data.sessionId) {
-        // Redirect to Stripe Checkout
-        const result = await stripe.redirectToCheckout({
-          sessionId: data.sessionId,
-        })
-
-        if (result.error) {
-          alert(result.error.message)
-        }
+      
+      if (data.url) {
+        window.location.href = data.url
       } else {
-        console.error('No session ID received')
+        console.error('No checkout URL received')
+        alert('Failed to initiate checkout. Please try again.')
       }
     } catch (error) {
       console.error('Error:', error)
