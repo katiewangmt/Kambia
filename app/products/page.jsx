@@ -230,7 +230,7 @@ export default function ProductsPage() {
             flex: 1,
             overflowY: 'auto',
             padding: '1rem',
-            marginTop: '-3rem',
+            marginTop: '-2.5rem',
             marginBottom: '80px'
           }}
         >
