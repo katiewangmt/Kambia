@@ -8,10 +8,11 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 
 export async function POST(req) {
   try {
+    // Get the items from the request
     const body = await req.json();
     const { boxes } = body;
 
-    // Simplify to just create a single line item for testing
+    // Create a Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [{
@@ -19,16 +20,18 @@ export async function POST(req) {
           currency: 'usd',
           product_data: {
             name: 'Macaron Box',
+            description: '4 Macarons per Box',
           },
           unit_amount: 1500, // $15.00
         },
-        quantity: 1,
+        quantity: boxes.length, // Number of boxes
       }],
       mode: 'payment',
-      success_url: 'https://kambiacooking.com/success?session_id={CHECKOUT_SESSION_ID}',
-      cancel_url: 'https://kambiacooking.com/products',
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/products`,
     });
 
+    // Return the session ID
     return NextResponse.json({ sessionId: session.id });
   } catch (error) {
     console.error('Stripe error:', error);

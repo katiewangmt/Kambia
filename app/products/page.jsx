@@ -4,6 +4,7 @@ import { Cinzel } from 'next/font/google'
 import Image from 'next/image'
 import { useState, useRef, useEffect } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
+import CheckoutButton from '../components/CheckoutButton'
 
 // Correct way to initialize Stripe on client side
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
@@ -374,23 +375,7 @@ export default function ProductsPage() {
           display: 'flex',
           justifyContent: 'center'
         }}>
-          <button 
-            className={cinzel.className}
-            style={{
-              width: '80%',
-              padding: '1rem',
-              backgroundColor: isCheckoutEnabled() ? '#736f8a' : '#cccccc',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: isCheckoutEnabled() ? 'pointer' : 'not-allowed',
-              fontSize: '1.1rem'
-            }}
-            onClick={handleCheckout}
-            disabled={!isCheckoutEnabled()}
-          >
-            {isCheckoutEnabled() ? 'Checkout' : 'Complete Boxes to Checkout'}
-          </button>
+          <CheckoutButton boxes={boxes} />
         </div>
       </div>
 
