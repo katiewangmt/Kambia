@@ -1,5 +1,7 @@
+'use client'
 import Link from 'next/link'
 import { Cinzel, Montserrat } from 'next/font/google'
+import { useState, useEffect } from 'react'
 
 const cinzel = Cinzel({ 
   subsets: ['latin'],
@@ -8,6 +10,12 @@ const cinzel = Cinzel({
 const montserrat = Montserrat({ subsets: ['latin'] })
 
 export default function Home() {
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    setIsVisible(true)
+  }, [])
+
   return (
     <div style={{
       width: '100vw',
@@ -35,6 +43,8 @@ export default function Home() {
           marginBottom: '-0.38em',
           fontWeight: '200',
           letterSpacing: '0.06em',
+          opacity: isVisible ? 1 : 0,
+          transition: 'opacity 1s ease-in-out'
         }} className={cinzel.className}>
           KAMBIA
         </h1>
@@ -44,6 +54,8 @@ export default function Home() {
           marginLeft: '0.5em',
           marginBottom: '2.5em',
           letterSpacing: '0.09em',
+          opacity: isVisible ? 1 : 0,
+          transition: 'opacity 1s ease-in-out'
         }} className={montserrat.className}>
           Crafting moments of delight! 𓌉◯𓇋
         </p>
@@ -66,6 +78,8 @@ export default function Home() {
               backgroundColor: 'rgba(0, 0, 0, 0.35)',
               textDecoration: 'underline',
               textDecorationColor: '#962a24',
+              opacity: isVisible ? 1 : 0,
+              transition: 'opacity 1s ease-in-out'
             }}
             className={montserrat.className}
           >
