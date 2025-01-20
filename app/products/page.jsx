@@ -4,7 +4,6 @@ import { Cinzel } from 'next/font/google'
 import Image from 'next/image'
 import { useState, useRef, useEffect } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
-import CheckoutButton from '../components/CheckoutButton'
 
 // Correct way to initialize Stripe on client side
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
@@ -103,8 +102,10 @@ export default function ProductsPage() {
 
   const handleCheckout = async () => {
     try {
-      console.log('Starting checkout...')
-      
+      // Disable checkout button while processing
+      const checkoutButton = document.querySelector('button[onClick="handleCheckout"]');
+      if (checkoutButton) checkoutButton.disabled = true;
+
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: {
@@ -113,27 +114,35 @@ export default function ProductsPage() {
         body: JSON.stringify({
           boxes: boxes.filter(box => box.macarons.length > 0)
         }),
-      })
+      });
 
-      const data = await response.json()
-      
-      if (data.sessionId) {
-        const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
-        const result = await stripe.redirectToCheckout({
-          sessionId: data.sessionId,
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const { sessionId, error } = await response.json();
+
+      if (error) {
+        throw new Error(error);
+      }
+
+      if (sessionId) {
+        const stripe = await stripePromise;
+        const { error: stripeError } = await stripe.redirectToCheckout({
+          sessionId
         });
-        
-        if (result.error) {
-          console.error('Stripe redirect error:', result.error);
-          alert('Failed to initiate checkout. Please try again.');
+
+        if (stripeError) {
+          throw new Error(stripeError.message);
         }
-      } else {
-        console.error('No session ID received');
-        alert('Failed to initiate checkout. Please try again.');
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Checkout error:', error);
       alert('Failed to initiate checkout. Please try again.');
+    } finally {
+      // Re-enable checkout button
+      const checkoutButton = document.querySelector('button[onClick="handleCheckout"]');
+      if (checkoutButton) checkoutButton.disabled = false;
     }
   }
 
@@ -375,7 +384,23 @@ export default function ProductsPage() {
           display: 'flex',
           justifyContent: 'center'
         }}>
-          <CheckoutButton boxes={boxes} />
+          <button 
+            className={cinzel.className}
+            style={{
+              width: '80%',
+              padding: '1rem',
+              backgroundColor: isCheckoutEnabled() ? '#736f8a' : '#cccccc',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: isCheckoutEnabled() ? 'pointer' : 'not-allowed',
+              fontSize: '1.1rem'
+            }}
+            onClick={handleCheckout}
+            disabled={!isCheckoutEnabled()}
+          >
+            {isCheckoutEnabled() ? 'Checkout' : 'Complete Boxes to Checkout'}
+          </button>
         </div>
       </div>
 
