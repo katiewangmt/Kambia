@@ -100,7 +100,7 @@ export default function ProductsPage() {
     try {
       const validBoxes = boxes.filter(box => box.macarons.length > 0);
       
-      const response = await fetch('/api/checkout', {
+      const response = await fetch('/api/checkout/route.js', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
