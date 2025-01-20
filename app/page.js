@@ -33,54 +33,60 @@ function HomeContent() {
       padding: 0,
       overflow: 'hidden',
       position: 'fixed',
-      top:0,
-      left:0,
+      top: 0,
+      left: 0,
       background: 'linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url("/images/macarons-background.JPG")',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'fixed',
+      display: 'flex',
+      alignItems: 'flex-start',
+      justifyContent: 'flex-start',
     }}>
       <div style={{
-        position: 'absolute',
-        top: '-4.1em',
-        left: '48px',
         padding: '20px',
+        width: '100%',
+        maxWidth: '1200px',
+        textAlign: 'left',
+        position: 'relative',
+        marginTop: 'clamp(20px, 5vh, 40px)',
+        marginLeft: 'clamp(20px, 5vw, 60px)',
       }}>
         <h1 style={{
-          fontSize: '110px',
+          fontSize: 'clamp(48px, 10vw, 110px)',
           color: 'white',
-          marginBottom: '-0.38em',
           fontWeight: '200',
           letterSpacing: '0.06em',
           opacity: isVisible ? 1 : 0,
-          transition: 'opacity 1s ease-in-out'
+          transition: 'opacity 0.8s ease-in-out',
+          margin: '0',
+          marginBottom: '0.1em',
         }} className={cinzel.className}>
           KAMBIA
         </h1>
         <p style={{
-          fontSize: '23px',
+          fontSize: 'clamp(16px, 3vw, 23px)',
           color: '#fffde8',
-          marginLeft: '0.5em',
-          marginBottom: '2.5em',
           letterSpacing: '0.09em',
           opacity: isVisible ? 1 : 0,
-          transition: 'opacity 1s ease-in-out'
+          transition: 'opacity 0.8s ease-in-out',
+          margin: '0',
+          marginBottom: '2em',
         }} className={montserrat.className}>
           Crafting moments of delight! 𓌉◯𓇋
         </p>
         <div style={{
-          position: 'relative',
-          top: '2.8em',
-          left: '4.3em',
+          margin: '0',
+          marginTop: '0.5em',
         }}>
           <Link 
             href="/products"
             style={{
-              padding: '16px 48px',
+              padding: 'clamp(12px, 2vw, 16px) clamp(24px, 4vw, 48px)',
               border: '1px solid white',
               borderRadius: '9999px',
               color: 'white',
-              fontSize: '24px',
+              fontSize: 'clamp(16px, 3vw, 24px)',
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
               transition: 'all 0.3s',
@@ -88,7 +94,8 @@ function HomeContent() {
               textDecoration: 'underline',
               textDecorationColor: '#962a24',
               opacity: isVisible ? 1 : 0,
-              transition: 'opacity 1s ease-in-out'
+              transition: 'opacity 0.8s ease-in-out',
+              display: 'inline-block',
             }}
             className={montserrat.className}
           >
