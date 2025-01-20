@@ -83,6 +83,19 @@ export default function ProductsPage() {
     }
   }
 
+  const isCheckoutEnabled = () => {
+    // Check if all boxes except the last one are full (4 macarons)
+    // and if there's at least one box with macarons
+    return boxes.every((box, index) => {
+      if (index === boxes.length - 1) {
+        // Last box should either be full or empty
+        return box.macarons.length === 0 || box.macarons.length === 4;
+      }
+      // All other boxes must be full
+      return box.macarons.length === 4;
+    }) && boxes.some(box => box.macarons.length === 4);
+  }
+
   return (
     <div style={{
       display: 'flex',
@@ -217,6 +230,7 @@ export default function ProductsPage() {
             flex: 1,
             overflowY: 'auto',
             padding: '1rem',
+            marginTop: '-3rem',
             marginBottom: '80px'
           }}
         >
@@ -224,7 +238,6 @@ export default function ProductsPage() {
             <div key={box.id} style={{
               backgroundColor: 'white',
               padding: '1rem',
-              marginTop: '-0rem',
               marginBottom: '1.5rem',
               borderRadius: '4px',
               boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
@@ -326,19 +339,21 @@ export default function ProductsPage() {
             style={{
               width: '80%',
               padding: '1rem',
-              backgroundColor: '#736f8a',
+              backgroundColor: isCheckoutEnabled() ? '#736f8a' : '#cccccc',
               color: 'white',
               border: 'none',
               borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '1.1rem',
-              letterSpacing: '0.1rem'
+              cursor: isCheckoutEnabled() ? 'pointer' : 'not-allowed',
+              fontSize: '1.1rem'
             }}
             onClick={() => {
-              console.log('Checkout clicked');
+              if (isCheckoutEnabled()) {
+                console.log('Checkout clicked');
+              }
             }}
+            disabled={!isCheckoutEnabled()}
           >
-            Checkout
+            {isCheckoutEnabled() ? 'Checkout' : 'Please Complete Boxes'}
           </button>
         </div>
       </div>
