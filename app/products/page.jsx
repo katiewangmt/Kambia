@@ -98,29 +98,33 @@ export default function ProductsPage() {
 
   const handleCheckout = async () => {
     try {
+      const validBoxes = boxes.filter(box => box.macarons.length > 0);
+      
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          boxes: boxes.filter(box => box.macarons.length > 0)
-        }),
+        body: JSON.stringify({ boxes: validBoxes }),
       });
 
       const data = await response.json();
 
-      if (data.url) {
-        // Redirect to Stripe Checkout
-        window.location.href = data.url;
-      } else {
-        throw new Error('No checkout URL received');
+      if (data.error) {
+        throw new Error(data.error);
       }
+
+      if (data.redirectUrl) {
+        window.location.href = data.redirectUrl;
+      } else {
+        throw new Error('No redirect URL received');
+      }
+
     } catch (error) {
       console.error('Checkout error:', error);
-      alert('Failed to initiate checkout. Please try again.');
+      alert('Failed to start checkout. Please try again.');
     }
-  }
+  };
 
   return (
     <div style={{
