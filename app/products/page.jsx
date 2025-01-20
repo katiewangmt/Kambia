@@ -3,6 +3,10 @@
 import { Cinzel } from 'next/font/google'
 import Image from 'next/image'
 import { useState, useRef, useEffect } from 'react'
+import { loadStripe } from '@stripe/stripe-js'
+
+// Make sure this is outside your component
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 
 const cinzel = Cinzel({ 
   subsets: ['latin'],
@@ -94,6 +98,47 @@ export default function ProductsPage() {
       // All other boxes must be full
       return box.macarons.length === 4;
     }) && boxes.some(box => box.macarons.length === 4);
+  }
+
+  const handleCheckout = async () => {
+    try {
+      console.log('Starting checkout...')
+      
+      // Get Stripe.js instance
+      const stripe = await stripePromise
+      console.log('Stripe loaded')
+
+      // Call your backend to create the Checkout Session
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          boxes: boxes.filter(box => box.macarons.length > 0)
+        }),
+      })
+
+      console.log('API Response:', response)
+      const data = await response.json()
+      console.log('Session Data:', data)
+
+      if (data.sessionId) {
+        // Redirect to Stripe Checkout
+        const result = await stripe.redirectToCheckout({
+          sessionId: data.sessionId,
+        })
+
+        if (result.error) {
+          alert(result.error.message)
+        }
+      } else {
+        console.error('No session ID received')
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      alert('Failed to initiate checkout. Please try again.')
+    }
   }
 
   return (
@@ -221,7 +266,7 @@ export default function ProductsPage() {
           marginTop: '3rem',
           textAlign: 'center'
         }}>
-          Customize
+          Your Cart
         </h2>
 
         <div 
@@ -346,14 +391,10 @@ export default function ProductsPage() {
               cursor: isCheckoutEnabled() ? 'pointer' : 'not-allowed',
               fontSize: '1.1rem'
             }}
-            onClick={() => {
-              if (isCheckoutEnabled()) {
-                console.log('Checkout clicked');
-              }
-            }}
+            onClick={handleCheckout}
             disabled={!isCheckoutEnabled()}
           >
-            {isCheckoutEnabled() ? 'Checkout' : 'Please Complete Boxes'}
+            {isCheckoutEnabled() ? 'Checkout' : 'Complete Boxes to Checkout'}
           </button>
         </div>
       </div>
