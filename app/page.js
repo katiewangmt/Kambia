@@ -44,7 +44,7 @@ export default function Home() {
           fontWeight: '200',
           letterSpacing: '0.06em',
           opacity: isVisible ? 1 : 0,
-          transition: 'opacity 1s ease-in-out'
+          transition: 'opacity 2s ease-in-out'
         }} className={cinzel.className}>
           KAMBIA
         </h1>
@@ -55,7 +55,7 @@ export default function Home() {
           marginBottom: '2.5em',
           letterSpacing: '0.09em',
           opacity: isVisible ? 1 : 0,
-          transition: 'opacity 1s ease-in-out'
+          transition: 'opacity 2s ease-in-out'
         }} className={montserrat.className}>
           Crafting moments of delight! 𓌉◯𓇋
         </p>
@@ -79,7 +79,7 @@ export default function Home() {
               textDecoration: 'underline',
               textDecorationColor: '#962a24',
               opacity: isVisible ? 1 : 0,
-              transition: 'opacity 1s ease-in-out'
+              transition: 'opacity 2s ease-in-out'
             }}
             className={montserrat.className}
           >
