@@ -107,7 +107,7 @@ export default function ProductsPage() {
           paddingLeft: '4rem',
         }}>
           <h1 className={cinzel.className} style={{ 
-            fontSize: '2.5rem'
+            fontSize: '3.3rem'
           }}>
             Our Flavors
           </h1>
@@ -203,9 +203,9 @@ export default function ProductsPage() {
         flexDirection: 'column'
       }}>
         <h2 className={cinzel.className} style={{ 
-          fontSize: '2.5rem',
+          fontSize: '2.8rem',
           padding: '1rem',
-          marginTop: '2.4rem',
+          marginTop: '3rem',
           textAlign: 'center'
         }}>
           Customize
@@ -224,7 +224,7 @@ export default function ProductsPage() {
             <div key={box.id} style={{
               backgroundColor: 'white',
               padding: '1rem',
-              marginTop: '-1rem',
+              marginTop: '-0rem',
               marginBottom: '1.5rem',
               borderRadius: '4px',
               boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
