@@ -3,7 +3,10 @@
 import { Cinzel } from 'next/font/google'
 import Image from 'next/image'
 import { useState, useRef, useEffect } from 'react'
-import TestCheckout from '../components/TestCheckout'
+import { loadStripe } from '@stripe/stripe-js'
+
+// Correct way to initialize Stripe on client side
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 
 const cinzel = Cinzel({ 
   subsets: ['latin'],
@@ -99,33 +102,44 @@ export default function ProductsPage() {
 
   const handleCheckout = async () => {
     try {
-      const validBoxes = boxes.filter(box => box.macarons.length > 0);
+      console.log('Starting checkout...')
       
+      // Get Stripe.js instance
+      const stripe = await stripePromise
+      console.log('Stripe loaded')
+
+      // Call your backend to create the Checkout Session
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ boxes: validBoxes }),
-      });
+        body: JSON.stringify({
+          boxes: boxes.filter(box => box.macarons.length > 0)
+        }),
+      })
 
-      const data = await response.json();
+      console.log('API Response:', response)
+      const data = await response.json()
+      console.log('Session Data:', data)
 
-      if (data.error) {
-        throw new Error(data.error);
-      }
+      if (data.sessionId) {
+        // Redirect to Stripe Checkout
+        const result = await stripe.redirectToCheckout({
+          sessionId: data.sessionId,
+        })
 
-      if (data.redirectUrl) {
-        window.location.href = data.redirectUrl;
+        if (result.error) {
+          alert(result.error.message)
+        }
       } else {
-        throw new Error('No redirect URL received');
+        console.error('No session ID received')
       }
-
     } catch (error) {
-      console.error('Checkout error:', error);
-      alert('Failed to start checkout. Please try again.');
+      console.error('Error:', error)
+      alert('Failed to initiate checkout. Please try again.')
     }
-  };
+  }
 
   return (
     <div style={{
@@ -136,7 +150,6 @@ export default function ProductsPage() {
       position: 'fixed',
       top: 0
     }}>
-      <TestCheckout />
       {/* Scrollable left container */}
       <div style={{
         width: '75%',

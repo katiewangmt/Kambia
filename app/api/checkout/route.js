@@ -1,44 +1,43 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+// Correct way to initialize Stripe on server side
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: '2023-10-16'
+});
 
 export async function POST(req) {
-  if (!process.env.STRIPE_SECRET_KEY) {
-    return NextResponse.json({ error: 'Stripe key missing' }, { status: 500 });
-  }
-
   try {
-    const { boxes } = await req.json();
-    
+    const body = await req.json();
+    const { boxes } = body;
+
     // Create line items from boxes
-    const lineItems = boxes
-      .filter(box => box.macarons.length > 0)
-      .map(box => ({
-        quantity: 1,
+    const lineItems = boxes.flatMap(box => {
+      if (box.macarons.length === 0) return [];
+      return [{
         price_data: {
           currency: 'usd',
-          unit_amount: Math.round(box.macarons.reduce((sum, m) => sum + m.price, 0) * 100),
           product_data: {
-            name: `Macaron Box (${box.macarons.length} pieces)`,
-            description: box.macarons.map(m => m.name).join(', ')
+            name: `Macaron Box ${box.id}`,
+            description: `Box of ${box.macarons.length} macarons`,
           },
+          unit_amount: box.macarons.reduce((sum, macaron) => sum + macaron.price * 100, 0), // Convert to cents
         },
-      }));
+        quantity: 1,
+      }];
+    });
 
-    // Create the checkout session
+    // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       line_items: lineItems,
       mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_URL}/success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_URL}/products`,
+      success_url: `${req.headers.get('origin')}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${req.headers.get('origin')}/products`,
     });
 
-    // Return the URL directly
-    return NextResponse.json({ redirectUrl: session.url });
-
+    return NextResponse.json({ sessionId: session.id });
   } catch (error) {
-    console.error('Stripe API Error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('Error:', error);
+    return NextResponse.json({ error: 'Error creating checkout session' }, { status: 500 });
   }
 } 
