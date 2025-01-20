@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { useState, useRef, useEffect } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 
-// Make sure this is outside your component
+// Correct way to initialize Stripe on client side
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 
 const cinzel = Cinzel({ 

@@ -1,6 +1,10 @@
 'use client'
 import { useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { loadStripe } from '@stripe/stripe-js'
+
+// Initialize Stripe if you need to verify the session
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 
 export default function SuccessPage() {
   const searchParams = useSearchParams()
