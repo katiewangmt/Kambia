@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
 // Correct way to initialize Stripe on server side
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+const stripe = new Stripe(process.env.FAKE_SECRET_KEY, {
   apiVersion: '2023-10-16'
 });
 
