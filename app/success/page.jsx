@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Cinzel } from 'next/font/google';
@@ -11,7 +11,7 @@ const cinzel = Cinzel({
   weight: ['400', '700']
 });
 
-export default function SuccessPage() {
+function SuccessContent() {
   const [status, setStatus] = useState('loading');
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
@@ -55,5 +55,22 @@ export default function SuccessPage() {
         </button>
       </Link>
     </div>
+  );
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh'
+      }}>
+        Loading...
+      </div>
+    }>
+      <SuccessContent />
+    </Suspense>
   );
 }
