@@ -3,7 +3,6 @@
 import { Cinzel } from 'next/font/google'
 import Image from 'next/image'
 import { useState, useRef, useEffect } from 'react'
-import TestCheckout from '../components/TestCheckout'
 
 const cinzel = Cinzel({ 
   subsets: ['latin'],
@@ -136,7 +135,6 @@ export default function ProductsPage() {
       position: 'fixed',
       top: 0
     }}>
-      <TestCheckout />
       {/* Scrollable left container */}
       <div style={{
         width: '75%',
