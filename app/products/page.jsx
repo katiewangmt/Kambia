@@ -113,7 +113,9 @@ export default function ProductsPage() {
           </h1>
           <p style={{
             color: '#B22222',
-            fontSize: '1rem'
+            fontSize: '0.85rem',
+            paddingBottom: '1.2rem',
+            marginTop: '-1.5rem'
           }}>
             * Allergy Warning: Nuts, Eggs, Dairy
           </p>
@@ -169,19 +171,19 @@ export default function ProductsPage() {
                   className={cinzel.className}
                   style={{
                     position: 'absolute',
-                    bottom: '2.3rem',
+                    bottom: '2.1rem',
                     right: '1.2rem',
-                    backgroundColor: '#007bff',
+                    backgroundColor: '#fbf5ff',
                     color: 'white',
                     border: 'none',
                     borderRadius: '4px',
                     padding: '0.5rem 1rem',
                     cursor: 'pointer',
-                    fontSize: '0.9rem'
+                    fontSize: '1.5rem',
                   }}
                   onClick={(e) => addToCart(macaron, e)}
                 >
-                  Add
+                  🛒
                 </button>
               </div>
             </div>
@@ -203,7 +205,7 @@ export default function ProductsPage() {
         <h2 className={cinzel.className} style={{ 
           fontSize: '2.5rem',
           padding: '1rem',
-          marginTop: '2.7rem',
+          marginTop: '2.4rem',
           textAlign: 'center'
         }}>
           Customize
@@ -222,7 +224,7 @@ export default function ProductsPage() {
             <div key={box.id} style={{
               backgroundColor: 'white',
               padding: '1rem',
-              marginTop: '-0.6rem',
+              marginTop: '-1rem',
               marginBottom: '1.5rem',
               borderRadius: '4px',
               boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
@@ -278,7 +280,6 @@ export default function ProductsPage() {
                   alignItems: 'center'
                 }}>
                   <p className={cinzel.className}>{item.name}</p>
-                  <p style={{ color: '#666' }}>${item.price.toFixed(2)}</p>
                 </div>
               ))}
               
@@ -287,15 +288,18 @@ export default function ProductsPage() {
                   className={cinzel.className}
                   onClick={addNewBox}
                   style={{
-                    width: '100%',
+                    width: '50%',
                     padding: '0.5rem',
                     marginTop: '1rem',
-                    backgroundColor: '#007bff',
+                    backgroundColor: '#736f8a',
                     color: 'white',
                     border: 'none',
                     borderRadius: '4px',
                     cursor: 'pointer',
-                    fontSize: '0.9rem'
+                    fontSize: '0.9rem',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                    display: 'block'
                   }}
                 >
                   Add New Box
@@ -322,12 +326,13 @@ export default function ProductsPage() {
             style={{
               width: '80%',
               padding: '1rem',
-              backgroundColor: '#007bff',
+              backgroundColor: '#736f8a',
               color: 'white',
               border: 'none',
               borderRadius: '4px',
               cursor: 'pointer',
-              fontSize: '1.1rem'
+              fontSize: '1.1rem',
+              letterSpacing: '0.1rem'
             }}
             onClick={() => {
               console.log('Checkout clicked');
