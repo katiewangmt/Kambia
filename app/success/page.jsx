@@ -1,52 +1,18 @@
 'use client'
-import { useEffect, Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
-import { loadStripe } from '@stripe/stripe-js'
 
-// Initialize Stripe if you need to verify the session
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
-
-// Create a separate component for the content that uses useSearchParams
-function SuccessContent() {
-  const searchParams = useSearchParams()
-  const sessionId = searchParams.get('session_id')
-
-  useEffect(() => {
-    // You can verify the payment here if needed
-    if (sessionId) {
-      console.log('Payment successful, session ID:', sessionId)
-    }
-  }, [sessionId])
-
-  return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: '100vh',
-      textAlign: 'center'
-    }}>
-      <h1>Thank you for your order!</h1>
-      <p>We'll send you a confirmation email shortly.</p>
-    </div>
-  )
-}
-
-// Main component wrapped with Suspense
 export default function SuccessPage() {
   return (
-    <Suspense fallback={
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh'
-      }}>
-        Loading...
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center p-8">
+        <h1 className="text-3xl font-bold mb-4">Thank you for your order!</h1>
+        <p className="mb-4">We'll start preparing your macarons right away.</p>
+        <a
+          href="/products"
+          className="inline-block bg-[#736f8a] text-white px-6 py-3 rounded-md hover:bg-[#5d596e] transition-colors"
+        >
+          Order More
+        </a>
       </div>
-    }>
-      <SuccessContent />
-    </Suspense>
-  )
-} 
+    </div>
+  );
+}

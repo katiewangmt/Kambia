@@ -14,12 +14,16 @@ export async function POST(req) {
     // Create line items from boxes
     const lineItems = boxes.flatMap(box => {
       if (box.macarons.length === 0) return [];
+      
+      // Create description with flavor list
+      const flavorsList = box.macarons.map(macaron => macaron.name).join(', ');
+      
       return [{
         price_data: {
           currency: 'usd',
           product_data: {
             name: `Macaron Box ${box.id}`,
-            description: `Box of ${box.macarons.length} macarons`,
+            description: `Flavors: ${flavorsList}`, // List all flavors in the description
           },
           unit_amount: box.macarons.reduce((sum, macaron) => sum + macaron.price * 100, 0), // Convert to cents
         },
@@ -31,7 +35,7 @@ export async function POST(req) {
     const session = await stripe.checkout.sessions.create({
       line_items: lineItems,
       mode: 'payment',
-      success_url: `${req.headers.get('origin')}/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${req.headers.get('origin')}/?payment_success=true`,
       cancel_url: `${req.headers.get('origin')}/products`,
     });
 
