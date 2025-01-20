@@ -39,18 +39,18 @@ export async function POST(req) {
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
-      success_url: `${req.headers.get('origin')}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.get('origin')}/products`,
+      success_url: 'https://kambiacooking.com/success',
+      cancel_url: 'https://kambiacooking.com/products',
       metadata: {
         totalBoxes: boxes.length.toString(),
       }
     });
 
-    return NextResponse.json({ sessionId: session.id });
+    return NextResponse.json({ url: session.url });
   } catch (error) {
     console.error('Stripe error:', error);
     return NextResponse.json(
-      { error: error.message },
+      { error: 'Checkout failed' },
       { status: 500 }
     );
   }
