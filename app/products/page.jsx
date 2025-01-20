@@ -116,15 +116,23 @@ export default function ProductsPage() {
 
       const data = await response.json()
       
-      if (data.url) {
-        window.location.href = data.url
+      if (data.sessionId) {
+        const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+        const result = await stripe.redirectToCheckout({
+          sessionId: data.sessionId,
+        });
+        
+        if (result.error) {
+          console.error('Stripe redirect error:', result.error);
+          alert('Failed to initiate checkout. Please try again.');
+        }
       } else {
-        console.error('No checkout URL received')
-        alert('Failed to initiate checkout. Please try again.')
+        console.error('No session ID received');
+        alert('Failed to initiate checkout. Please try again.');
       }
     } catch (error) {
-      console.error('Error:', error)
-      alert('Failed to initiate checkout. Please try again.')
+      console.error('Error:', error);
+      alert('Failed to initiate checkout. Please try again.');
     }
   }
 

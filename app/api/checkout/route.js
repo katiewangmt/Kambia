@@ -25,11 +25,11 @@ export async function POST(req) {
         quantity: 1,
       }],
       mode: 'payment',
-      success_url: 'https://kambiacooking.com',
+      success_url: 'https://kambiacooking.com/success?session_id={CHECKOUT_SESSION_ID}',
       cancel_url: 'https://kambiacooking.com/products',
     });
 
-    return NextResponse.json({ url: session.url });
+    return NextResponse.json({ sessionId: session.id });
   } catch (error) {
     console.error('Stripe error:', error);
     return NextResponse.json(
