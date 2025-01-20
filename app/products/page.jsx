@@ -3,10 +3,6 @@
 import { Cinzel } from 'next/font/google'
 import Image from 'next/image'
 import { useState, useRef, useEffect } from 'react'
-import { loadStripe } from '@stripe/stripe-js'
-
-// Correct way to initialize Stripe on client side
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 
 const cinzel = Cinzel({ 
   subsets: ['latin'],
@@ -102,10 +98,6 @@ export default function ProductsPage() {
 
   const handleCheckout = async () => {
     try {
-      // Disable checkout button while processing
-      const checkoutButton = document.querySelector('button[onClick="handleCheckout"]');
-      if (checkoutButton) checkoutButton.disabled = true;
-
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: {
@@ -116,33 +108,17 @@ export default function ProductsPage() {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
+      const data = await response.json();
 
-      const { sessionId, error } = await response.json();
-
-      if (error) {
-        throw new Error(error);
-      }
-
-      if (sessionId) {
-        const stripe = await stripePromise;
-        const { error: stripeError } = await stripe.redirectToCheckout({
-          sessionId
-        });
-
-        if (stripeError) {
-          throw new Error(stripeError.message);
-        }
+      if (data.url) {
+        // Redirect to Stripe Checkout
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL received');
       }
     } catch (error) {
       console.error('Checkout error:', error);
       alert('Failed to initiate checkout. Please try again.');
-    } finally {
-      // Re-enable checkout button
-      const checkoutButton = document.querySelector('button[onClick="handleCheckout"]');
-      if (checkoutButton) checkoutButton.disabled = false;
     }
   }
 
