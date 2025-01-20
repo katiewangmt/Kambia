@@ -3,6 +3,7 @@
 import { Cinzel } from 'next/font/google'
 import Image from 'next/image'
 import { useState, useRef, useEffect } from 'react'
+import TestCheckout from '../components/TestCheckout'
 
 const cinzel = Cinzel({ 
   subsets: ['latin'],
@@ -100,7 +101,7 @@ export default function ProductsPage() {
     try {
       const validBoxes = boxes.filter(box => box.macarons.length > 0);
       
-      const response = await fetch('/api/checkout/route.js', {
+      const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -135,6 +136,7 @@ export default function ProductsPage() {
       position: 'fixed',
       top: 0
     }}>
+      <TestCheckout />
       {/* Scrollable left container */}
       <div style={{
         width: '75%',
