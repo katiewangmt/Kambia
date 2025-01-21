@@ -353,8 +353,7 @@ export default function ProductsPage() {
           gap: '1rem',
           paddingTop: '1rem',
           paddingLeft: windowWidth <= 768 ? '1rem' : '4rem',
-          paddingRight: windowWidth <= 768 ? '1rem' : '1rem',
-          justifyContent: 'center'
+          paddingRight: windowWidth <= 768 ? '1rem' : '1rem'
         }}>
           {macarons.map((macaron) => (
             <div 
