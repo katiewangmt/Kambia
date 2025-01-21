@@ -86,7 +86,7 @@ const styles = {
     }
   },
   cartContainer: {
-    width: '32%',
+    width: '30%',
     backgroundColor: '#f5f5f5',
     position: 'fixed',
     right: 0,
