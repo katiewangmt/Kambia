@@ -138,11 +138,8 @@ export default function ProductsPage() {
 
   // Then update your JSX to include these classes
   useEffect(() => {
-    // Create style element
     const styleEl = document.createElement('style');
-    
-    // Convert the styles object to CSS with media queries
-    const cssString = `
+    styleEl.innerHTML = `
       @media (max-width: 768px) {
         body {
           margin: 0;
@@ -179,8 +176,8 @@ export default function ProductsPage() {
         /* Cart container styles */
         .cart-container {
           width: 100% !important;
-          height: 60vh !important;
-          position: fixed !important;
+          height: 36vh !important;  /* Changed from 20vh to 25vh (1/4 of screen) */
+          position: sticky !important;
           bottom: 0 !important;
           top: auto !important;
           z-index: 1000 !important;
@@ -189,19 +186,18 @@ export default function ProductsPage() {
         
         /* Cart title styles */
         .cart-title {
-          font-size: 1.75rem !important;
-          margin-top: 0.5rem !important;
-          padding: 0.5rem !important;
+          font-size: 1.4rem !important;  /* Made slightly smaller */
+          padding: 0.2rem !important;    /* Reduced padding */
+          margin-top: 0.1rem !important; /* Reduced margin */
+        }
+        .cart-content {
+          padding: 0.2rem !important;
+          max-height: calc(25vh - 35px) !important;  /* Adjusted for new height */
         }
       }
     `;
-    
-    styleEl.innerHTML = cssString;
     document.head.appendChild(styleEl);
-    
-    return () => {
-      document.head.removeChild(styleEl);
-    };
+    return () => document.head.removeChild(styleEl);
   }, []);
 
   useEffect(() => {
@@ -409,9 +405,9 @@ export default function ProductsPage() {
       {/* Right container with cart */}
       <div className="cart-container" style={styles.cartContainer}>
         <h1 className={cinzel.className} style={{ 
-          fontSize: windowWidth <= 768 ? '2rem' : '2.9rem',
+          fontSize: windowWidth <= 768 ? '1.5rem' : '2.9rem',
           padding: '1rem',
-          marginTop: windowWidth <= 768 ? '1rem' : '3rem',
+          marginTop: windowWidth <= 768 ? '0rem' : '3rem',
           paddingBottom: windowWidth <= 768 ? '2rem' : '1rem',
           textAlign: 'center'
         }}>
