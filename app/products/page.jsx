@@ -14,6 +14,109 @@ const cinzel = Cinzel({
   weight: ['400', '700']
 })
 
+// Add these CSS styles at the top of your file, after the imports
+const styles = {
+  container: {
+    display: 'flex',
+    width: '100%',
+    height: '100vh',
+    margin: 0,
+    position: 'fixed',
+    top: 0,
+    '@media (max-width: 768px)': {
+      flexDirection: 'column',
+      position: 'relative',
+      height: 'auto',
+      overflowX: 'hidden',
+      width: '80vw',
+      maxWidth: '90%'
+    }
+  },
+  leftContainer: {
+    width: '75%',
+    padding: 0,  // Removed padding
+    margin: 0,   // Removed margin
+    backgroundColor: 'white',
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    height: '100vh',
+    '@media (max-width: 768px)': {
+      width: '100vw',
+      maxWidth: '100%',
+      height: 'auto'
+    }
+  },
+  titleContainer: {
+    width: '100%',
+    margin: 0,    // Removed margin
+    padding: 0,   // Removed padding
+    '@media (max-width: 768px)': {
+      width: '100vw',
+      maxWidth: '100%',
+      textAlign: 'center'
+    }
+  },
+  flavorGrid: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '0.25rem',
+    marginLeft: '4rem',
+    padding: '1rem',
+    '@media (max-width: 768px)': {
+      marginLeft: 0,
+      gap: '1rem',
+      flexDirection: 'column'
+    }
+  },
+  flavorCard: {
+    width: 'calc(33.333% - 0.25rem)',
+    cursor: 'pointer',
+    borderRadius: '8px',
+    overflow: 'hidden',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+    transition: 'transform 0.2s',
+    backgroundColor: 'white',
+    transform: 'scale(0.84)',
+    transformOrigin: 'top left',
+    margin: '-1rem',
+    '@media (max-width: 768px)': {
+      width: 'calc(50% - 0.5rem)',
+      transform: 'none',
+      margin: 0
+    }
+  },
+  cartContainer: {
+    width: '26%',
+    backgroundColor: '#f5f5f5',
+    position: 'fixed',
+    right: 0,
+    top: 0,
+    height: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    '@media (max-width: 768px)': {
+      width: '100%',
+      height: '30vh',
+      position: 'sticky',  // Changed from 'fixed' to 'sticky'
+      bottom: 0,
+      top: 'auto',
+      zIndex: 1000,
+      boxShadow: '0 -4px 6px rgba(0,0,0,0.1)'
+    }
+  },
+  cartTitle: {
+    fontSize: '2.8rem',
+    padding: '1rem',
+    marginTop: '3rem',
+    textAlign: 'center',
+    '@media (max-width: 768px)': {
+      fontSize: '2rem',
+      marginTop: '0.5rem',
+      padding: '0.5rem'
+    }
+  }
+};
+
 export default function ProductsPage() {
   const [selectedFlavor, setSelectedFlavor] = useState(null)
   const [boxes, setBoxes] = useState([{
@@ -21,6 +124,7 @@ export default function ProductsPage() {
     macarons: []
   }])  // Start with one empty box
   const [isAdding, setIsAdding] = useState(false)  // New state to track additions
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
   
   const scrollableRef = useRef(null)  // Reference for the scrollable div
 
@@ -31,6 +135,83 @@ export default function ProductsPage() {
       setIsAdding(false);  // Reset the flag
     }
   }, [boxes, isAdding])
+
+  // Then update your JSX to include these classes
+  useEffect(() => {
+    // Create style element
+    const styleEl = document.createElement('style');
+    
+    // Convert the styles object to CSS with media queries
+    const cssString = `
+      @media (max-width: 768px) {
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        
+        /* Container styles */
+        .responsive-container {
+          flex-direction: column !important;
+          position: relative !important;
+          height: auto !important;
+        }
+        
+        /* Left container styles */
+        .products-container {
+          width: 100% !important;
+          height: auto !important;
+          padding-bottom: 60vh !important;
+        }
+        
+        /* Flavor grid styles */
+        .flavor-grid {
+          margin-left: 1rem !important;
+          gap: 1rem !important;
+        }
+        
+        /* Flavor card styles */
+        .flavor-card {
+          width: calc(50% - 0.5rem) !important;
+          transform: none !important;
+          margin: 0 !important;
+        }
+        
+        /* Cart container styles */
+        .cart-container {
+          width: 100% !important;
+          height: 60vh !important;
+          position: fixed !important;
+          bottom: 0 !important;
+          top: auto !important;
+          z-index: 1000 !important;
+          box-shadow: 0 -4px 6px rgba(0,0,0,0.1) !important;
+        }
+        
+        /* Cart title styles */
+        .cart-title {
+          font-size: 1.75rem !important;
+          margin-top: 0.5rem !important;
+          padding: 0.5rem !important;
+        }
+      }
+    `;
+    
+    styleEl.innerHTML = cssString;
+    document.head.appendChild(styleEl);
+    
+    return () => {
+      document.head.removeChild(styleEl);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const macarons = [
     { id: 1, name: 'Matcha Strawberry', price: 3.75, image: '/kambia-product-photos/matcha-strawberry/matcha-strawberry1.jpeg' },
@@ -142,27 +323,13 @@ export default function ProductsPage() {
   }
 
   return (
-    <div style={{
-      display: 'flex',
-      width: '100%',
-      height: '100vh',
-      margin: 0,
-      position: 'fixed',
-      top: 0
-    }}>
-      {/* Scrollable left container */}
-      <div style={{
-        width: '75%',
-        padding: '0.5rem',
-        backgroundColor: 'white',
-        overflowY: 'auto',
-        overflowX: 'hidden',
-        height: '100vh'
-      }}>
+    <div className="responsive-container" style={styles.container}>
+      <div className="products-container" style={styles.leftContainer}>
         <div style={{ 
           width: '100%',
-          paddingTop: '1.3rem',
-          paddingLeft: '4rem',
+          paddingTop: windowWidth <= 768 ? '0.5rem' : '1.3rem',
+          paddingLeft: windowWidth <= 768 ? '0rem' : '3rem',
+          textAlign: windowWidth <= 768 ? 'center' : 'left'
         }}>
           <h1 className={cinzel.className} style={{ 
             fontSize: '3.3rem'
@@ -172,7 +339,7 @@ export default function ProductsPage() {
           <p style={{
             color: '#B22222',
             fontSize: '0.85rem',
-            paddingBottom: '1.2rem',
+            paddingBottom: windowWidth <= 768 ? '1.2rem' : '2rem',
             marginTop: '-1.5rem'
           }}>
             * Allergy Warning: Nuts, Eggs, Dairy
@@ -183,26 +350,16 @@ export default function ProductsPage() {
         <div style={{
           display: 'flex',
           flexWrap: 'wrap',
-          gap: '0.25rem',
-          marginLeft: '4rem',
-          padding: '1rem'
+          gap: '1rem',
+          paddingLeft: windowWidth <= 768 ? '1rem' : '4rem',
+          paddingRight: windowWidth <= 768 ? '1rem' : '1rem'
         }}>
           {macarons.map((macaron) => (
             <div 
               key={macaron.id}
+              className="flavor-card"
               onClick={() => setSelectedFlavor(macaron)}
-              style={{
-                width: 'calc(33.333% - 0.25rem)',
-                cursor: 'pointer',
-                borderRadius: '8px',
-                overflow: 'hidden',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                transition: 'transform 0.2s',
-                backgroundColor: 'white',
-                transform: 'scale(0.84)',
-                transformOrigin: 'top left',
-                margin: '-1rem'
-              }}
+              style={styles.flavorCard}
             >
               <div style={{ position: 'relative', paddingTop: '100%' }}>
                 <Image
@@ -213,12 +370,12 @@ export default function ProductsPage() {
                 />
               </div>
               <div style={{ padding: '1rem', position: 'relative' }}>
-                <h3 className={cinzel.className} style={{ 
-                  fontSize: '1.75rem',
+                <h2 className={cinzel.className} style={{ 
+                  fontSize: windowWidth <= 768 ? '1.3rem' : '1.75rem',  // Smaller on mobile
                   marginBottom: '0.25rem'
                 }}>
                   {macaron.name}
-                </h3>
+                </h2>
                 <p style={{ 
                   color: '#666',
                   fontSize: '1.5rem'
@@ -250,24 +407,16 @@ export default function ProductsPage() {
       </div>
 
       {/* Right container with cart */}
-      <div style={{
-        width: '25%',
-        backgroundColor: '#f5f5f5',
-        position: 'fixed',
-        right: 0,
-        top: 0,
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column'
-      }}>
-        <h2 className={cinzel.className} style={{ 
-          fontSize: '2.8rem',
+      <div className="cart-container" style={styles.cartContainer}>
+        <h1 className={cinzel.className} style={{ 
+          fontSize: windowWidth <= 768 ? '2rem' : '2.9rem',
           padding: '1rem',
-          marginTop: '3rem',
+          marginTop: windowWidth <= 768 ? '1rem' : '3rem',
+          paddingBottom: windowWidth <= 768 ? '2rem' : '1rem',
           textAlign: 'center'
         }}>
           Your Cart
-        </h2>
+        </h1>
 
         <div 
           ref={scrollableRef}
