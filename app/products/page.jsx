@@ -124,7 +124,8 @@ export default function ProductsPage() {
     macarons: []
   }])  // Start with one empty box
   const [isAdding, setIsAdding] = useState(false)  // New state to track additions
-  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
+  const [windowWidth, setWindowWidth] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
   
   const scrollableRef = useRef(null)  // Reference for the scrollable div
 
@@ -201,13 +202,22 @@ export default function ProductsPage() {
   }, []);
 
   useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
+    // Set the initial width
+    setWindowWidth(window.innerWidth)
+    setIsLoading(false)
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth)
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // Don't render content until we know the window width
+  if (isLoading) {
+    return null // or a loading spinner if you prefer
+  }
 
   const macarons = [
     { id: 1, name: 'Cheesecake', price: 3.75, image: '/kambia-product-photos/cheesecake/cheesecake1.jpeg' },
@@ -346,64 +356,73 @@ export default function ProductsPage() {
           </p>
         </div>
 
-        {/* Flavor Grid with Flexbox */}
+        {/* Wrapper div for centering */}
         <div style={{
           display: 'flex',
-          flexWrap: 'wrap',
-          gap: '1rem',
-          paddingTop: '1rem',
-          paddingLeft: windowWidth <= 768 ? '1rem' : '4rem',
-          paddingRight: windowWidth <= 768 ? '1rem' : '1rem'
+          justifyContent: 'center',
+          width: '100%'
         }}>
-          {macarons.map((macaron) => (
-            <div 
-              key={macaron.id}
-              className="flavor-card"
-              onClick={() => setSelectedFlavor(macaron)}
-              style={styles.flavorCard}
-            >
-              <div style={{ position: 'relative', paddingTop: '100%' }}>
-                <Image
-                  src={macaron.image}
-                  alt={macaron.name}
-                  fill
-                  style={{ objectFit: 'cover' }}
-                />
+          {/* Flavor Grid with Flexbox */}
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '1rem',
+            paddingTop: '1rem',
+            maxWidth: '1400px',
+            paddingLeft: windowWidth <= 768 ? '1rem' : '4rem',
+            paddingRight: windowWidth <= 768 ? '1rem' : '4rem',
+            justifyContent: 'flex-start'
+          }}>
+            {macarons.map((macaron) => (
+              <div 
+                key={macaron.id}
+                className="flavor-card"
+                onClick={() => setSelectedFlavor(macaron)}
+                style={styles.flavorCard}
+              >
+                <div style={{ position: 'relative', paddingTop: '100%' }}>
+                  <Image
+                    src={macaron.image}
+                    alt={macaron.name}
+                    fill
+                    style={{ objectFit: 'cover' }}
+                  />
+                </div>
+                <div style={{ padding: '1rem', position: 'relative' }}>
+                  <h2 className={cinzel.className} style={{ 
+                    fontSize: windowWidth <= 768 ? '1.3rem' : '1.75rem',  // Smaller on mobile
+                    marginBottom: '0.25rem'
+                  }}>
+                    {macaron.name}
+                  </h2>
+                  <p style={{ 
+                    color: '#666',
+                    fontSize: '1.5rem'
+                  }}>
+                    ${macaron.price.toFixed(2)}
+                  </p>
+                  <button
+                    className={cinzel.className}
+                    style={{
+                      position: 'absolute',
+                      bottom: '2.1rem',
+                      right: '1.2rem',
+                      backgroundColor: '#fbf5ff',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      padding: '0.5rem 1rem',
+                      cursor: 'pointer',
+                      fontSize: '1.5rem',
+                    }}
+                    onClick={(e) => addToCart(macaron, e)}
+                  >
+                    🛒
+                  </button>
+                </div>
               </div>
-              <div style={{ padding: '1rem', position: 'relative' }}>
-                <h2 className={cinzel.className} style={{ 
-                  fontSize: windowWidth <= 768 ? '1.3rem' : '1.75rem',  // Smaller on mobile
-                  marginBottom: '0.25rem'
-                }}>
-                  {macaron.name}
-                </h2>
-                <p style={{ 
-                  color: '#666',
-                  fontSize: '1.5rem'
-                }}>
-                  ${macaron.price.toFixed(2)}
-                </p>
-                <button
-                  className={cinzel.className}
-                  style={{
-                    position: 'absolute',
-                    bottom: '2.1rem',
-                    right: '1.2rem',
-                    backgroundColor: '#fbf5ff',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '4px',
-                    padding: '0.5rem 1rem',
-                    cursor: 'pointer',
-                    fontSize: '1.5rem',
-                  }}
-                  onClick={(e) => addToCart(macaron, e)}
-                >
-                  🛒
-                </button>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
 
