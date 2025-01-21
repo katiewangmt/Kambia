@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Macaron Shop',
+  title: 'Kambia',
   description: 'Delicious French Macarons',
 }
 

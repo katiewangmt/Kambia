@@ -210,12 +210,16 @@ export default function ProductsPage() {
   }, []);
 
   const macarons = [
-    { id: 1, name: 'Matcha Strawberry', price: 3.75, image: '/kambia-product-photos/matcha-strawberry/matcha-strawberry1.jpeg' },
-    { id: 2, name: 'Lemon', price: 3.75, image: '/kambia-product-photos/lemon/lemon1.jpeg' },
-    { id: 3, name: 'Pumpkin Spice', price: 3.75, image: '/kambia-product-photos/pumpkin-spice/pumpkin-spice1.jpeg' },
-    { id: 4, name: 'Apple Pie', price: 3.75, image: '/kambia-product-photos/apple-pie/apple-pie1.jpeg' },
-    { id: 5, name: "S'mores", price: 3.75, image: '/kambia-product-photos/smores/smores1.jpeg' },
-    { id: 6, name: 'Coconut', price: 3.75, image: '/kambia-product-photos/coconut/coconut1.jpeg' },
+    { id: 1, name: 'Cheesecake', price: 3.75, image: '/kambia-product-photos/cheesecake/cheesecake1.jpeg' },
+    { id: 2, name: 'Coffee', price: 3.75, image: '/kambia-product-photos/coffee/coffee1.jpeg' },
+    { id: 3, name: 'Chocolate Strawberry', price: 3.75, image: '/kambia-product-photos/chocolate-strawberry/chocolate-strawberry1.jpeg' },
+    { id: 4, name: 'Double Chocolate', price: 3.75, image: '/kambia-product-photos/double-chocolate/double-chocolate1.jpeg' },
+    { id: 5, name: 'Matcha Strawberry', price: 3.75, image: '/kambia-product-photos/matcha-strawberry/matcha-strawberry1.jpeg' },
+    { id: 6, name: 'Lemon', price: 3.75, image: '/kambia-product-photos/lemon/lemon1.jpeg' },
+    { id: 7, name: 'Pumpkin Spice', price: 3.75, image: '/kambia-product-photos/pumpkin-spice/pumpkin-spice1.jpeg' },
+    { id: 8, name: 'Apple Pie', price: 3.75, image: '/kambia-product-photos/apple-pie/apple-pie1.jpeg' },
+    { id: 9, name: "S'mores", price: 3.75, image: '/kambia-product-photos/smores/smores1.jpeg' },
+    { id: 10, name: 'Coconut', price: 3.75, image: '/kambia-product-photos/coconut/coconut1.jpeg' },
   ]
 
   const addToCart = (macaron, e) => {
@@ -347,8 +351,10 @@ export default function ProductsPage() {
           display: 'flex',
           flexWrap: 'wrap',
           gap: '1rem',
+          paddingTop: '1rem',
           paddingLeft: windowWidth <= 768 ? '1rem' : '4rem',
-          paddingRight: windowWidth <= 768 ? '1rem' : '1rem'
+          paddingRight: windowWidth <= 768 ? '1rem' : '1rem',
+          justifyContent: 'center'
         }}>
           {macarons.map((macaron) => (
             <div 
