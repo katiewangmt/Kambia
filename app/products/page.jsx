@@ -157,7 +157,7 @@ export default function ProductsPage() {
         .products-container {
           width: 100% !important;
           height: auto !important;
-          padding-bottom: 60vh !important;
+          padding-bottom: 4.2vh !important;
         }
         
         /* Flavor grid styles */
