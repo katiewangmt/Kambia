@@ -205,13 +205,30 @@ export default function ProductsPage() {
           max-height: calc(25vh - 35px) !important;  /* Adjusted for new height */
         }
         
-        /* Prevent pull-to-refresh and bounce effects */
+        /* Prevent pull-to-refresh but allow scrolling */
         html, body {
-          overscroll-behavior: none;
           overscroll-behavior-y: none;
-          position: fixed;
+          position: relative; /* Changed from fixed */
           width: 100%;
-          height: 100%;
+          height: auto; /* Changed from 100% */
+        }
+        
+        /* Products container styles */
+        .products-container {
+          width: 100% !important;
+          height: auto !important;
+          position: relative !important;
+          z-index: 1;
+        }
+        
+        /* Cart container styles */
+        .cart-container {
+          position: fixed !important;
+          bottom: 0 !important;
+          width: 100% !important;
+          z-index: 1000 !important;
+          touch-action: pan-y !important;
+          -webkit-overflow-scrolling: touch !important;
         }
         
         /* Cart drag handle styles */
@@ -225,12 +242,6 @@ export default function ProductsPage() {
           touch-action: none;
           -webkit-user-select: none;
           user-select: none;
-        }
-        
-        /* Cart container styles */
-        .cart-container {
-          touch-action: pan-y;
-          -webkit-overflow-scrolling: touch;
         }
       }
     `;
@@ -298,7 +309,7 @@ export default function ProductsPage() {
     }
   }, [handleTouchStart, handleTouchMove, handleTouchEnd])
 
-  // Add this effect after your other useEffect hooks
+  // Update the handleCartExpansion effect
   useEffect(() => {
     // Only run on client-side and mobile
     if (typeof window === 'undefined' || windowWidth > 768) return;
@@ -307,20 +318,21 @@ export default function ProductsPage() {
     
     const handleCartExpansion = () => {
       if (cartHeight > 36) {
-        // Lock scrolling when cart is expanded
+        // When cart is expanded, don't fix the products container
         if (productsContainer) {
-          productsContainer.style.position = 'fixed';
-          productsContainer.style.overflow = 'hidden';
+          productsContainer.style.position = 'relative'; // Changed from 'fixed'
           productsContainer.style.width = '100%';
-          productsContainer.style.height = '100vh';
+          // Remove height constraint to allow scrolling
+          productsContainer.style.height = 'auto';
+          productsContainer.style.paddingBottom = `${cartHeight}vh`; // Add padding to prevent content from being hidden behind cart
         }
       } else {
-        // Restore scrolling when cart is collapsed
+        // Restore normal state when cart is collapsed
         if (productsContainer) {
           productsContainer.style.position = '';
-          productsContainer.style.overflow = '';
           productsContainer.style.width = '';
           productsContainer.style.height = '';
+          productsContainer.style.paddingBottom = '4.2vh';
         }
       }
     };
@@ -331,9 +343,9 @@ export default function ProductsPage() {
       // Cleanup
       if (productsContainer) {
         productsContainer.style.position = '';
-        productsContainer.style.overflow = '';
         productsContainer.style.width = '';
         productsContainer.style.height = '';
+        productsContainer.style.paddingBottom = '4.2vh';
       }
     };
   }, [cartHeight, windowWidth]);
