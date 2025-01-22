@@ -204,6 +204,34 @@ export default function ProductsPage() {
           padding: 0.2rem !important;
           max-height: calc(25vh - 35px) !important;  /* Adjusted for new height */
         }
+        
+        /* Prevent pull-to-refresh and bounce effects */
+        html, body {
+          overscroll-behavior: none;
+          overscroll-behavior-y: none;
+          position: fixed;
+          width: 100%;
+          height: 100%;
+        }
+        
+        /* Cart drag handle styles */
+        .cart-header {
+          touch-action: none;
+          -webkit-user-select: none;
+          user-select: none;
+        }
+        
+        .drag-handle {
+          touch-action: none;
+          -webkit-user-select: none;
+          user-select: none;
+        }
+        
+        /* Cart container styles */
+        .cart-container {
+          touch-action: pan-y;
+          -webkit-overflow-scrolling: touch;
+        }
       }
     `;
     document.head.appendChild(styleEl);
@@ -226,18 +254,21 @@ export default function ProductsPage() {
   // Add touch event handlers
   const handleTouchStart = useCallback((e) => {
     if (windowWidth > 768) return // Only enable on mobile
-    setIsDragging(true)
-    setStartY(e.touches[0].clientY)
-    setStartHeight(cartHeight)
-  }, [windowWidth, cartHeight])
+    // Prevent default only if touching the drag handle or cart header
+    if (e.target.closest('.drag-handle') || e.target.closest('.cart-header')) {
+      e.preventDefault();
+      setIsDragging(true);
+      setStartY(e.touches[0].clientY);
+      setStartHeight(cartHeight);
+    }
+  }, [windowWidth, cartHeight]);
 
   const handleTouchMove = useCallback((e) => {
     if (!isDragging) return;
     
-    // Prevent default scrolling only when dragging
-    if (isDragging) {
-      e.preventDefault();
-    }
+    // Always prevent default when dragging
+    e.preventDefault();
+    e.stopPropagation();
     
     const deltaY = startY - e.touches[0].clientY;
     const newHeight = startHeight + (deltaY / window.innerHeight) * 100;
@@ -527,26 +558,25 @@ export default function ProductsPage() {
           height: windowWidth <= 768 ? `${cartHeight}vh` : '100vh',
           transition: windowWidth <= 768 && isDragging ? 'none' : 'height 0.3s ease-out',
           overflowY: windowWidth <= 768 && cartHeight > 36 ? 'auto' : 'hidden',
-          backgroundColor: '#f5f5f5'
-        }}
-        onTouchMove={(e) => {
-          if (windowWidth <= 768 && cartHeight > 36) {
-            e.stopPropagation();
-          }
+          backgroundColor: '#f5f5f5',
+          touchAction: windowWidth <= 768 ? 'none' : 'auto' // Prevent default touch behavior
         }}
       >
         {/* Only show drag handle on mobile */}
         {windowWidth <= 768 && (
-          <div
-            style={{
-              width: '50px',
-              height: '4px',
-              backgroundColor: '#ddd',
-              borderRadius: '2px',
-              margin: '8px auto',
-              cursor: 'grab'
-            }}
-          />
+          <div className="cart-header">
+            <div
+              className="drag-handle"
+              style={{
+                width: '50px',
+                height: '4px',
+                backgroundColor: '#ddd',
+                borderRadius: '2px',
+                margin: '8px auto',
+                cursor: 'grab'
+              }}
+            />
+          </div>
         )}
         
         <h1 className={cinzel.className} style={{ 
