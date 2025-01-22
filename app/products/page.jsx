@@ -270,16 +270,16 @@ export default function ProductsPage() {
     e.stopPropagation();
     
     const deltaY = startY - e.touches[0].clientY;
-    // Increase sensitivity by multiplying deltaY
-    const newHeight = startHeight + (deltaY / window.innerHeight * 100 * 1.5); // Increased sensitivity
-    // Reduce max height to 75vh
-    setCartHeight(Math.min(Math.max(36, newHeight), 75));
+    // Increase sensitivity by multiplying deltaY by 2 for faster response
+    const newHeight = startHeight + (deltaY / window.innerHeight * 100 * 1.5); 
+    // Change max height to 95vh
+    setCartHeight(Math.min(Math.max(36, newHeight), 95));
   }, [isDragging, startY, startHeight]);
 
   const handleTouchEnd = useCallback(() => {
     setIsDragging(false);
-    // Snap to either expanded (75vh) or collapsed (36vh) state
-    setCartHeight(cartHeight > 55 ? 75 : 36);
+    // Snap to either expanded (95vh) or collapsed (36vh) state
+    setCartHeight(cartHeight > 65 ? 95 : 36);
   }, [cartHeight]);
 
   // Add event listeners
