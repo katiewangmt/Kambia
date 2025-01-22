@@ -96,8 +96,7 @@ const styles = {
     flexDirection: 'column',
     '@media (max-width: 768px)': {
       width: '100%',
-      height: '30vh',
-      position: 'sticky',  // Changed from 'fixed' to 'sticky'
+      position: 'fixed',
       bottom: 0,
       top: 'auto',
       zIndex: 1000,
@@ -526,17 +525,17 @@ export default function ProductsPage() {
         style={{
           ...styles.cartContainer,
           height: windowWidth <= 768 ? `${cartHeight}vh` : '100vh',
-          transition: isDragging ? 'none' : 'height 0.3s ease-out',
-          overflowY: cartHeight > 36 ? 'auto' : 'hidden',
+          transition: windowWidth <= 768 && isDragging ? 'none' : 'height 0.3s ease-out',
+          overflowY: windowWidth <= 768 && cartHeight > 36 ? 'auto' : 'hidden',
           backgroundColor: '#f5f5f5'
         }}
         onTouchMove={(e) => {
-          if (cartHeight > 36) {
+          if (windowWidth <= 768 && cartHeight > 36) {
             e.stopPropagation();
           }
         }}
       >
-        {/* Add drag handle for mobile */}
+        {/* Only show drag handle on mobile */}
         {windowWidth <= 768 && (
           <div
             style={{
