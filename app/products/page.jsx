@@ -225,11 +225,11 @@ export default function ProductsPage() {
     { id: 3, name: 'Chocolate Strawberry', price: 3.75, image: '/kambia-product-photos/chocolate-strawberry/chocolate-strawberry1.jpeg' },
     { id: 4, name: 'Double Chocolate', price: 3.75, image: '/kambia-product-photos/double-chocolate/double-chocolate1.jpeg' },
     { id: 5, name: 'Matcha Strawberry', price: 3.75, image: '/kambia-product-photos/matcha-strawberry/matcha-strawberry1.jpeg' },
-    { id: 6, name: 'Lemon', price: 3.75, image: '/kambia-product-photos/lemon/lemon1.jpeg' },
-    { id: 7, name: 'Pumpkin Spice', price: 3.75, image: '/kambia-product-photos/pumpkin-spice/pumpkin-spice1.jpeg' },
-    { id: 8, name: 'Apple Pie', price: 3.75, image: '/kambia-product-photos/apple-pie/apple-pie1.jpeg' },
-    { id: 9, name: "S'mores", price: 3.75, image: '/kambia-product-photos/smores/smores1.jpeg' },
-    { id: 10, name: 'Coconut', price: 3.75, image: '/kambia-product-photos/coconut/coconut1.jpeg' },
+    // { id: 6, name: 'Lemon', price: 3.75, image: '/kambia-product-photos/lemon/lemon1.jpeg' },
+    // { id: 7, name: 'Pumpkin Spice', price: 3.75, image: '/kambia-product-photos/pumpkin-spice/pumpkin-spice1.jpeg' },
+    // { id: 8, name: 'Apple Pie', price: 3.75, image: '/kambia-product-photos/apple-pie/apple-pie1.jpeg' },
+    { id: 6, name: "S'mores", price: 3.75, image: '/kambia-product-photos/smores/smores1.jpeg' },
+    // { id: 10, name: 'Coconut', price: 3.75, image: '/kambia-product-photos/coconut/coconut1.jpeg' },
   ]
 
   const addToCart = (macaron, e) => {
