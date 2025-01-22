@@ -4,6 +4,7 @@ import { Cinzel } from 'next/font/google'
 import Image from 'next/image'
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
+import { flavorDetails } from './flavorDetails'
 
 // Correct way to initialize Stripe on client side
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
@@ -132,6 +133,9 @@ export default function ProductsPage() {
   const cartRef = useRef(null)
   
   const scrollableRef = useRef(null)  // Reference for the scrollable div
+
+  // Add new state for current image index
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // Only scroll on additions
   useEffect(() => {
@@ -352,16 +356,103 @@ export default function ProductsPage() {
   }
 
   const macarons = [
-    { id: 1, name: 'Cheesecake', price: 3.75, image: '/kambia-product-photos/cheesecake/cheesecake1.jpeg' },
-    { id: 2, name: 'Coffee', price: 3.75, image: '/kambia-product-photos/coffee/coffee1.jpeg' },
-    { id: 3, name: 'Chocolate Strawberry', price: 3.75, image: '/kambia-product-photos/chocolate-strawberry/chocolate-strawberry1.jpeg' },
-    { id: 4, name: 'Double Chocolate', price: 3.75, image: '/kambia-product-photos/double-chocolate/double-chocolate1.jpeg' },
-    { id: 5, name: 'Matcha Strawberry', price: 3.75, image: '/kambia-product-photos/matcha-strawberry/matcha-strawberry1.jpeg' },
-    // { id: 6, name: 'Lemon', price: 3.75, image: '/kambia-product-photos/lemon/lemon1.jpeg' },
-    // { id: 7, name: 'Pumpkin Spice', price: 3.75, image: '/kambia-product-photos/pumpkin-spice/pumpkin-spice1.jpeg' },
-    // { id: 8, name: 'Apple Pie', price: 3.75, image: '/kambia-product-photos/apple-pie/apple-pie1.jpeg' },
-    { id: 6, name: "S'mores", price: 3.75, image: '/kambia-product-photos/smores/smores1.jpeg' },
-    // { id: 10, name: 'Coconut', price: 3.75, image: '/kambia-product-photos/coconut/coconut1.jpeg' },
+    { 
+      id: 1, 
+      name: 'Cheesecake', 
+      price: 3.75, 
+      images: [
+        '/kambia-product-photos/cheesecake/cheesecake1.jpeg',
+        '/kambia-product-photos/cheesecake/cheesecake2.jpeg',
+        '/kambia-product-photos/cheesecake/cheesecake3.jpeg',
+        '/kambia-product-photos/cheesecake/cheesecake4.jpeg'
+      ]
+    },
+    { 
+      id: 2, 
+      name: 'Coffee', 
+      price: 3.75, 
+      images: [
+        '/kambia-product-photos/coffee/coffee1.jpeg',
+        '/kambia-product-photos/coffee/coffee2.jpeg',
+        '/kambia-product-photos/coffee/coffee3.jpeg'
+      ]
+    },
+    { 
+      id: 3, 
+      name: 'Chocolate Strawberry', 
+      price: 3.75, 
+      images: [
+        '/kambia-product-photos/chocolate-strawberry/chocolate-strawberry1.jpeg',
+        '/kambia-product-photos/chocolate-strawberry/chocolate-strawberry2.jpeg',
+        '/kambia-product-photos/chocolate-strawberry/chocolate-strawberry3.jpeg',
+        '/kambia-product-photos/chocolate-strawberry/chocolate-strawberry4.jpeg'
+      ]
+    },
+    { 
+      id: 4, 
+      name: 'Double Chocolate', 
+      price: 3.75, 
+      images: [
+        '/kambia-product-photos/double-chocolate/double-chocolate1.jpeg',
+        '/kambia-product-photos/double-chocolate/double-chocolate2.jpeg'
+      ]
+    },
+    { 
+      id: 5, 
+      name: 'Matcha Strawberry', 
+      price: 3.75, 
+      images: [
+        '/kambia-product-photos/matcha-strawberry/matcha-strawberry1.jpeg',
+        '/kambia-product-photos/matcha-strawberry/matcha-strawberry2.jpeg',
+        '/kambia-product-photos/matcha-strawberry/matcha-strawberry3.jpeg'
+      ]
+    },
+    { 
+      id: 6, 
+      name: 'S\'mores', 
+      price: 3.75, 
+      images: [
+        '/kambia-product-photos/smores/smores1.jpeg',
+        '/kambia-product-photos/smores/smores2.jpeg',
+        '/kambia-product-photos/smores/smores3.jpeg'
+      ]
+    },
+    { 
+      id: 7, 
+      name: "Lemon", 
+      price: 3.75, 
+      images: [
+        '/kambia-product-photos/lemon/lemon1.jpeg',
+        '/kambia-product-photos/lemon/lemon2.jpeg'      ]
+    },
+    { 
+      id: 8, 
+      name: "Apple Pie", 
+      price: 3.75, 
+      images: [
+        '/kambia-product-photos/apple-pie/apple-pie1.jpeg',
+        '/kambia-product-photos/apple-pie/apple-pie2.jpeg'
+      ]
+    },
+    { 
+      id: 9, 
+      name: "Pumpkin Spice", 
+      price: 3.75, 
+      images: [
+        '/kambia-product-photos/pumpkin-spice/pumpkin-spice1.jpeg',
+        '/kambia-product-photos/pumpkin-spice/pumpkin-spice2.jpeg'
+      ]
+    },
+    { 
+      id: 10, 
+      name: "Coconut", 
+      price: 3.75, 
+      images: [
+        '/kambia-product-photos/coconut/coconut1.jpeg',
+        '/kambia-product-photos/coconut/coconut2.jpeg',
+        '/kambia-product-photos/coconut/coconut3.jpeg'
+      ]
+    }
   ]
 
   const addToCart = (macaron, e) => {
@@ -464,6 +555,31 @@ export default function ProductsPage() {
     }
   }
 
+  // Add function to handle image navigation
+  const nextImage = (e) => {
+    e.stopPropagation();
+    if (selectedFlavor) {
+      setCurrentImageIndex((prev) => 
+        prev === selectedFlavor.images.length - 1 ? 0 : prev + 1
+      );
+    }
+  };
+
+  const prevImage = (e) => {
+    e.stopPropagation();
+    if (selectedFlavor) {
+      setCurrentImageIndex((prev) => 
+        prev === 0 ? selectedFlavor.images.length - 1 : prev - 1
+      );
+    }
+  };
+
+  // Reset image index when modal closes
+  const handleCloseModal = () => {
+    setSelectedFlavor(null);
+    setCurrentImageIndex(0);
+  };
+
   return (
     <div className="responsive-container" style={styles.container}>
       <div className="products-container" style={styles.leftContainer}>
@@ -514,7 +630,7 @@ export default function ProductsPage() {
               >
                 <div style={{ position: 'relative', paddingTop: '100%' }}>
                   <Image
-                    src={macaron.image}
+                    src={macaron.images[0]}
                     alt={macaron.name}
                     fill
                     style={{ objectFit: 'cover' }}
@@ -744,14 +860,17 @@ export default function ProductsPage() {
         }}>
           <div style={{
             backgroundColor: 'white',
-            padding: '2rem',
+            padding: '2.7rem',
             borderRadius: '8px',
-            maxWidth: '500px',
+            maxWidth: '450px',
             width: '90%',
-            position: 'relative'
+            position: 'relative',
+            maxHeight: '85vh',  // Limit height to 90% of viewport
+            display: 'flex',
+            flexDirection: 'column'
           }}>
             <button 
-              onClick={() => setSelectedFlavor(null)}
+              onClick={handleCloseModal}
               style={{
                 position: 'absolute',
                 right: '1rem',
@@ -759,16 +878,124 @@ export default function ProductsPage() {
                 border: 'none',
                 background: 'none',
                 fontSize: '1.5rem',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                zIndex: 2
               }}
             >
               ×
             </button>
-            <h3 className={cinzel.className} style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>
-              {selectedFlavor.name}
-            </h3>
-            {/* We'll get this data from a separate file */}
-            <p>Description and ingredients will go here</p>
+            
+            {/* Image container - keep this fixed */}
+            <div style={{ 
+              position: 'relative', 
+              paddingTop: '60%',
+              marginTop: '1rem',
+              marginBottom: '1rem',
+              width: '100%',
+              maxWidth: '450px',
+              flexShrink: 0  // Prevent image from shrinking
+            }}>
+              <Image
+                src={selectedFlavor.images[currentImageIndex]}
+                alt={selectedFlavor.name}
+                fill
+                style={{ 
+                  objectFit: 'cover', 
+                  borderRadius: '4px',
+                  objectPosition: 'center center'
+                }}
+              />
+              
+              {/* Navigation arrows */}
+              <button
+                onClick={prevImage}
+                style={{
+                  position: 'absolute',
+                  left: '10px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  backgroundColor: 'rgba(255,255,255,0.8)',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '40px',
+                  height: '40px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '1.5rem',
+                  zIndex: 1
+                }}
+              >
+                ‹
+              </button>
+              <button
+                onClick={nextImage}
+                style={{
+                  position: 'absolute',
+                  right: '10px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  backgroundColor: 'rgba(255,255,255,0.8)',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '40px',
+                  height: '40px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '1.5rem',
+                  zIndex: 1
+                }}
+              >
+                ›
+              </button>
+              
+              {/* Image counter */}
+              <div style={{
+                position: 'absolute',
+                bottom: '10px',
+                right: '10px',
+                backgroundColor: 'rgba(0,0,0,0.6)',
+                color: 'white',
+                padding: '4px 8px',
+                borderRadius: '4px',
+                fontSize: '0.8rem'
+              }}>
+                {currentImageIndex + 1}/{selectedFlavor.images.length}
+              </div>
+            </div>
+            
+            {/* Scrollable content container */}
+            <div style={{
+              overflowY: 'auto',
+              flex: 1,
+              paddingRight: '10px'  // Add space for scrollbar
+            }}>
+              <h3 className={cinzel.className} style={{ fontSize: '1.8rem', marginBottom: '1rem' }}>
+                {selectedFlavor.name}
+              </h3>
+              <p style={{ marginBottom: '1.5rem', lineHeight: '1.6' }}>
+                {flavorDetails[selectedFlavor.name]?.description}
+              </p>
+              <div style={{ marginBottom: '1.5rem' }}>
+                <h4 className={cinzel.className} style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>
+                  Ingredients
+                </h4>
+                <p style={{ color: '#666' }}>
+                  {flavorDetails[selectedFlavor.name]?.ingredients.join(', ')}
+                </p>
+              </div>
+              <div style={{ marginBottom: '1rem' }}>
+                <h4 className={cinzel.className} style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>
+                  Allergens
+                </h4>
+                <p style={{ color: '#B22222' }}>
+                  Contains: {flavorDetails[selectedFlavor.name]?.allergens.join(', ')}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       )}
