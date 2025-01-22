@@ -856,18 +856,21 @@ export default function ProductsPage() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          zIndex: 1000
+          zIndex: 1000,
+          padding: '1rem' // Add padding to ensure modal doesn't touch screen edges on mobile
         }}>
           <div style={{
             backgroundColor: 'white',
             padding: '2.7rem',
             borderRadius: '8px',
-            maxWidth: '450px',
             width: '90%',
             position: 'relative',
-            maxHeight: '85vh',  // Limit height to 90% of viewport
+            maxWidth: '400px',      // Same max-width for all devices
+            maxHeight: '600px',     // Fixed max-height for all devices
+            height: '90%',          // Take up 90% of available height
             display: 'flex',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            margin: 'auto'          // Center in available space
           }}>
             <button 
               onClick={handleCloseModal}
