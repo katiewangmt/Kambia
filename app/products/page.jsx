@@ -2,7 +2,7 @@
 
 import { Cinzel } from 'next/font/google'
 import Image from 'next/image'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 
 // Correct way to initialize Stripe on client side
@@ -126,6 +126,11 @@ export default function ProductsPage() {
   const [isAdding, setIsAdding] = useState(false)  // New state to track additions
   const [windowWidth, setWindowWidth] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [cartHeight, setCartHeight] = useState(36) // Initial height in vh
+  const [isDragging, setIsDragging] = useState(false)
+  const [startY, setStartY] = useState(0)
+  const [startHeight, setStartHeight] = useState(36)
+  const cartRef = useRef(null)
   
   const scrollableRef = useRef(null)  // Reference for the scrollable div
 
@@ -177,12 +182,17 @@ export default function ProductsPage() {
         /* Cart container styles */
         .cart-container {
           width: 100% !important;
-          height: 36vh !important;  /* Changed from 20vh to 25vh (1/4 of screen) */
-          position: sticky !important;
+          position: fixed !important;  /* Changed from sticky to fixed */
           bottom: 0 !important;
           top: auto !important;
           z-index: 1000 !important;
           box-shadow: 0 -4px 6px rgba(0,0,0,0.1) !important;
+          transition: height 0.3s ease-out !important;
+        }
+        
+        /* Prevent body scroll when cart is expanded */
+        body.cart-expanded {
+          overflow: hidden;
         }
         
         /* Cart title styles */
@@ -213,6 +223,89 @@ export default function ProductsPage() {
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
+
+  // Add touch event handlers
+  const handleTouchStart = useCallback((e) => {
+    if (windowWidth > 768) return // Only enable on mobile
+    setIsDragging(true)
+    setStartY(e.touches[0].clientY)
+    setStartHeight(cartHeight)
+  }, [windowWidth, cartHeight])
+
+  const handleTouchMove = useCallback((e) => {
+    if (!isDragging) return;
+    
+    // Prevent default scrolling only when dragging
+    if (isDragging) {
+      e.preventDefault();
+    }
+    
+    const deltaY = startY - e.touches[0].clientY;
+    const newHeight = startHeight + (deltaY / window.innerHeight) * 100;
+    setCartHeight(Math.min(Math.max(36, newHeight), 90));
+  }, [isDragging, startY, startHeight]);
+
+  const handleTouchEnd = useCallback(() => {
+    setIsDragging(false)
+    // Snap to either expanded (90vh) or collapsed (36vh) state
+    setCartHeight(cartHeight > 63 ? 90 : 36)
+  }, [cartHeight])
+
+  // Add event listeners
+  useEffect(() => {
+    const cart = cartRef.current
+    if (!cart) return
+
+    cart.addEventListener('touchstart', handleTouchStart)
+    document.addEventListener('touchmove', handleTouchMove)
+    document.addEventListener('touchend', handleTouchEnd)
+
+    return () => {
+      cart.removeEventListener('touchstart', handleTouchStart)
+      document.removeEventListener('touchmove', handleTouchMove)
+      document.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [handleTouchStart, handleTouchMove, handleTouchEnd])
+
+  // Add this effect after your other useEffect hooks
+  useEffect(() => {
+    // Only run on client-side and mobile
+    if (typeof window === 'undefined' || windowWidth > 768) return;
+
+    const productsContainer = document.querySelector('.products-container');
+    
+    const handleCartExpansion = () => {
+      if (cartHeight > 36) {
+        // Lock scrolling when cart is expanded
+        if (productsContainer) {
+          productsContainer.style.position = 'fixed';
+          productsContainer.style.overflow = 'hidden';
+          productsContainer.style.width = '100%';
+          productsContainer.style.height = '100vh';
+        }
+      } else {
+        // Restore scrolling when cart is collapsed
+        if (productsContainer) {
+          productsContainer.style.position = '';
+          productsContainer.style.overflow = '';
+          productsContainer.style.width = '';
+          productsContainer.style.height = '';
+        }
+      }
+    };
+
+    handleCartExpansion();
+
+    return () => {
+      // Cleanup
+      if (productsContainer) {
+        productsContainer.style.position = '';
+        productsContainer.style.overflow = '';
+        productsContainer.style.width = '';
+        productsContainer.style.height = '';
+      }
+    };
+  }, [cartHeight, windowWidth]);
 
   // Don't render content until we know the window width
   if (isLoading) {
@@ -427,7 +520,36 @@ export default function ProductsPage() {
       </div>
 
       {/* Right container with cart */}
-      <div className="cart-container" style={styles.cartContainer}>
+      <div 
+        ref={cartRef}
+        className="cart-container" 
+        style={{
+          ...styles.cartContainer,
+          height: windowWidth <= 768 ? `${cartHeight}vh` : '100vh',
+          transition: isDragging ? 'none' : 'height 0.3s ease-out',
+          overflowY: cartHeight > 36 ? 'auto' : 'hidden',
+          backgroundColor: '#f5f5f5'
+        }}
+        onTouchMove={(e) => {
+          if (cartHeight > 36) {
+            e.stopPropagation();
+          }
+        }}
+      >
+        {/* Add drag handle for mobile */}
+        {windowWidth <= 768 && (
+          <div
+            style={{
+              width: '50px',
+              height: '4px',
+              backgroundColor: '#ddd',
+              borderRadius: '2px',
+              margin: '8px auto',
+              cursor: 'grab'
+            }}
+          />
+        )}
+        
         <h1 className={cinzel.className} style={{ 
           fontSize: windowWidth <= 768 ? '1.5rem' : '2.9rem',
           padding: '1rem',
