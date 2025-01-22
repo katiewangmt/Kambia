@@ -416,43 +416,43 @@ export default function ProductsPage() {
         '/kambia-product-photos/smores/smores2.jpeg',
         '/kambia-product-photos/smores/smores3.jpeg'
       ]
-    },
-    { 
-      id: 7, 
-      name: "Lemon", 
-      price: 3.75, 
-      images: [
-        '/kambia-product-photos/lemon/lemon1.jpeg',
-        '/kambia-product-photos/lemon/lemon2.jpeg'      ]
-    },
-    { 
-      id: 8, 
-      name: "Apple Pie", 
-      price: 3.75, 
-      images: [
-        '/kambia-product-photos/apple-pie/apple-pie1.jpeg',
-        '/kambia-product-photos/apple-pie/apple-pie2.jpeg'
-      ]
-    },
-    { 
-      id: 9, 
-      name: "Pumpkin Spice", 
-      price: 3.75, 
-      images: [
-        '/kambia-product-photos/pumpkin-spice/pumpkin-spice1.jpeg',
-        '/kambia-product-photos/pumpkin-spice/pumpkin-spice2.jpeg'
-      ]
-    },
-    { 
-      id: 10, 
-      name: "Coconut", 
-      price: 3.75, 
-      images: [
-        '/kambia-product-photos/coconut/coconut1.jpeg',
-        '/kambia-product-photos/coconut/coconut2.jpeg',
-        '/kambia-product-photos/coconut/coconut3.jpeg'
-      ]
     }
+    // { 
+    //   id: 7, 
+    //   name: "Lemon", 
+    //   price: 3.75, 
+    //   images: [
+    //     '/kambia-product-photos/lemon/lemon1.jpeg',
+    //     '/kambia-product-photos/lemon/lemon2.jpeg'      ]
+    // },
+    // { 
+    //   id: 8, 
+    //   name: "Apple Pie", 
+    //   price: 3.75, 
+    //   images: [
+    //     '/kambia-product-photos/apple-pie/apple-pie1.jpeg',
+    //     '/kambia-product-photos/apple-pie/apple-pie2.jpeg'
+    //   ]
+    // },
+    // { 
+    //   id: 9, 
+    //   name: "Pumpkin Spice", 
+    //   price: 3.75, 
+    //   images: [
+    //     '/kambia-product-photos/pumpkin-spice/pumpkin-spice1.jpeg',
+    //     '/kambia-product-photos/pumpkin-spice/pumpkin-spice2.jpeg'
+    //   ]
+    // },
+    // { 
+    //   id: 10, 
+    //   name: "Coconut", 
+    //   price: 3.75, 
+    //   images: [
+    //     '/kambia-product-photos/coconut/coconut1.jpeg',
+    //     '/kambia-product-photos/coconut/coconut2.jpeg',
+    //     '/kambia-product-photos/coconut/coconut3.jpeg'
+    //   ]
+    // }
   ]
 
   const addToCart = (macaron, e) => {
@@ -882,7 +882,8 @@ export default function ProductsPage() {
                 background: 'none',
                 fontSize: '1.5rem',
                 cursor: 'pointer',
-                zIndex: 2
+                zIndex: 2,
+                color: '#666'
               }}
             >
               ×
@@ -927,7 +928,8 @@ export default function ProductsPage() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontSize: '1.5rem',
-                  zIndex: 1
+                  zIndex: 1,
+                  color: '#666'
                 }}
               >
                 ‹
@@ -949,7 +951,8 @@ export default function ProductsPage() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontSize: '1.5rem',
-                  zIndex: 1
+                  zIndex: 1,
+                  color: '#666'
                 }}
               >
                 ›
