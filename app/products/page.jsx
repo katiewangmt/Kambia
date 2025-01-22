@@ -162,7 +162,7 @@ export default function ProductsPage() {
         .products-container {
           width: 100% !important;
           height: auto !important;
-          padding-bottom: 4.2vh !important;
+          padding-bottom: 45vh !important; /* Increased padding to ensure visibility of last items */
         }
         
         /* Flavor grid styles */
@@ -318,21 +318,18 @@ export default function ProductsPage() {
     
     const handleCartExpansion = () => {
       if (cartHeight > 36) {
-        // When cart is expanded, don't fix the products container
         if (productsContainer) {
-          productsContainer.style.position = 'relative'; // Changed from 'fixed'
+          productsContainer.style.position = 'relative';
           productsContainer.style.width = '100%';
-          // Remove height constraint to allow scrolling
           productsContainer.style.height = 'auto';
-          productsContainer.style.paddingBottom = `${cartHeight}vh`; // Add padding to prevent content from being hidden behind cart
+          productsContainer.style.paddingBottom = `${cartHeight + 10}vh`; // Added extra padding
         }
       } else {
-        // Restore normal state when cart is collapsed
         if (productsContainer) {
           productsContainer.style.position = '';
           productsContainer.style.width = '';
           productsContainer.style.height = '';
-          productsContainer.style.paddingBottom = '4.2vh';
+          productsContainer.style.paddingBottom = '45vh'; // Updated default padding
         }
       }
     };
@@ -340,12 +337,11 @@ export default function ProductsPage() {
     handleCartExpansion();
 
     return () => {
-      // Cleanup
       if (productsContainer) {
         productsContainer.style.position = '';
         productsContainer.style.width = '';
         productsContainer.style.height = '';
-        productsContainer.style.paddingBottom = '4.2vh';
+        productsContainer.style.paddingBottom = '45vh'; // Updated cleanup padding
       }
     };
   }, [cartHeight, windowWidth]);
