@@ -126,10 +126,10 @@ export default function ProductsPage() {
   const [isAdding, setIsAdding] = useState(false)  // New state to track additions
   const [windowWidth, setWindowWidth] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [cartHeight, setCartHeight] = useState(24) // Initial height in vh
+  const [cartHeight, setCartHeight] = useState(27) // Initial height in vh
   const [isDragging, setIsDragging] = useState(false)
   const [startY, setStartY] = useState(0)
-  const [startHeight, setStartHeight] = useState(24)
+  const [startHeight, setStartHeight] = useState(27)
   const cartRef = useRef(null)
   
   const scrollableRef = useRef(null)  // Reference for the scrollable div
@@ -288,13 +288,13 @@ export default function ProductsPage() {
     // Increase sensitivity by multiplying deltaY by 2 for faster response
     const newHeight = startHeight + (deltaY / window.innerHeight * 100 * 2); 
     // Change max height to 95vh
-    setCartHeight(Math.min(Math.max(24, newHeight), 85));
+    setCartHeight(Math.min(Math.max(27, newHeight), 85));
   }, [isDragging, startY, startHeight]);
 
   const handleTouchEnd = useCallback(() => {
     setIsDragging(false);
     // Snap to either expanded (95vh) or collapsed (36vh) state
-    setCartHeight(cartHeight > 55 ? 85 : 24);
+    setCartHeight(cartHeight > 55 ? 85 : 27);
   }, [cartHeight]);
 
   // Add event listeners
@@ -321,7 +321,7 @@ export default function ProductsPage() {
     const productsContainer = document.querySelector('.products-container');
     
     const handleCartExpansion = () => {
-      if (cartHeight > 24) {
+      if (cartHeight > 27) {
         if (productsContainer) {
           productsContainer.style.position = 'relative';
           productsContainer.style.width = '100%';
